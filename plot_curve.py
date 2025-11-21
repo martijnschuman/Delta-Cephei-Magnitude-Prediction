@@ -12,9 +12,6 @@ warnings.filterwarnings("ignore", category=ErfaWarning)
 
 
 CSV_PATH = "observations_20251116_051444-CCD.csv"
-FILTER_START_DATE = False # Whether to filter by start and end date
-START_DATE_STR = "2025-01-01" # Adjusted start date for smaller dataset yyyy-mm-dd
-END_DATE_STR   = "2026-01-01" # Adjusted end date for smaller dataset yyyy-mm-dd
 PERIOD = 5.36629 # days
 JD0 = 2460991.18731207 # Derived epoch from find_epoch.py
 
@@ -40,12 +37,6 @@ df["Date"] = pd.to_datetime(df["Date"], utc=True)
 # Keep only certain band observations
 keep_bands = ["JOHNSON V"]
 df = df[df["Band"].isin(keep_bands)]
-
-# Filter by start and end date if enabled
-if FILTER_START_DATE:
-    start_dt = pd.to_datetime(START_DATE_STR, utc=True)
-    end_dt = pd.to_datetime(END_DATE_STR, utc=True)
-    df = df[(df["Date"] >= start_dt) & (df["Date"] <= end_dt)].copy()
 
 if len(df) == 0:
     raise ValueError("No data left after filtering")
@@ -110,7 +101,7 @@ phase = df["Phase"].values
 mag = df["Magnitude"].values
 
 # Choose number of harmonics
-order = 5   # Cepheids work well with 4–6
+order = 6   # Cepheids work well with 4–6
 
 # Initial guess of parameters
 ncoeffs = 1 + 2*order
